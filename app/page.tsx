@@ -179,7 +179,7 @@ export default function TreinoApp() {
   }, [concluidos]);
 
   useEffect(() => {
-    let timer;
+    let timer: NodeJS.Timeout;
 
     if (rodando && tempo > 0) {
       timer = setInterval(() => {
