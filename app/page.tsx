@@ -191,11 +191,10 @@ export default function TreinoApp() {
   }, [rodando, tempo]);
 
   const toggleExercicio = (key: string) => {
-    setConcluidos((prev) => ({
-      ...prev,
-      [key]: !prev[key],
-    }));
-  };
+   setConcluidos((prev: Record<string, boolean>) => ({
+  ...prev,
+  [key]: !prev[key],
+}));
 
   const formatarTempo = (segundos) => {
     const min = Math.floor(segundos / 60);
