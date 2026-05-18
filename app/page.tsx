@@ -193,7 +193,7 @@ export default function TreinoApp() {
   const toggleExercicio = (key: string) => {
   setConcluidos((prev: Record<string, boolean>) => ({
     ...prev,
-    [key]: !prev[key],
+    [key]: !(prev[key] ?? false),
   }));
 };
 
