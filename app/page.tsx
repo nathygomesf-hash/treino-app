@@ -197,7 +197,7 @@ export default function TreinoApp() {
   }));
 };
 
-  const formatarTempo = (segundos) => {
+  const formatarTempo = (segundos: number) => {
     const min = Math.floor(segundos / 60);
     const sec = segundos % 60;
 
