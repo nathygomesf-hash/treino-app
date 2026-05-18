@@ -190,7 +190,7 @@ export default function TreinoApp() {
     return () => clearInterval(timer);
   }, [rodando, tempo]);
 
-  const toggleExercicio = (key) => {
+  const toggleExercicio = (key: string) => {
     setConcluidos((prev) => ({
       ...prev,
       [key]: !prev[key],
