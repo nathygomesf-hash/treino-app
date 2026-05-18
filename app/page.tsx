@@ -163,7 +163,7 @@ export default function TreinoApp() {
     },
   };
 
-  const [concluidos, setConcluidos] = useState({});
+  const [concluidos, setConcluidos] = useState<Record<string, boolean>>({});
   const [tempo, setTempo] = useState(60);
   const [rodando, setRodando] = useState(false);
 
