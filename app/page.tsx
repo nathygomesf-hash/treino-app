@@ -1,165 +1,165 @@
 "use client";
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 export default function TreinoApp() {
-  const treinos = {
+  const treinos: Record<string, any> = {
     Segunda: {
-      foco: 'Glúteo + Posterior',
+      foco: "Glúteo + Posterior",
       blocos: [
         {
-          titulo: 'Bloco 1 — Força',
-          voltas: '3 voltas',
-          descanso: '90s',
+          titulo: "Bloco 1 — Força",
+          voltas: "3 voltas",
+          descanso: "90s",
           exercicios: [
-            ['Agachamento sumô', '12'],
-            ['Stiff', '12'],
-            ['Afundo reverso', '10 cada perna'],
-            ['Agachamento pulsando', '20s'],
+            ["Agachamento sumô", "12"],
+            ["Stiff", "12"],
+            ["Afundo reverso", "10 cada perna"],
+            ["Agachamento pulsando", "20s"],
           ],
         },
         {
-          titulo: 'Bloco 2 — Glúteo',
-          voltas: '3 voltas',
-          descanso: '60s',
+          titulo: "Bloco 2 — Glúteo",
+          voltas: "3 voltas",
+          descanso: "60s",
           exercicios: [
-            ['Elevação pélvica', '12'],
-            ['Abdução com mini band', '20'],
-            ['Coice no cabo ou banco', '15 cada'],
+            ["Elevação pélvica", "12"],
+            ["Abdução com mini band", "20"],
+            ["Coice no cabo ou banco", "15 cada"],
           ],
         },
       ],
       finalizador: [
-        'Subida no banco',
-        'Agachamento rápido',
-        'Corrida leve',
-        'Corda imaginária',
+        "Subida no banco",
+        "Agachamento rápido",
+        "Corrida leve",
+        "Corda imaginária",
       ],
     },
 
     Terça: {
-      foco: 'Ombro + Braço + Costas',
+      foco: "Ombro + Braço + Costas",
       blocos: [
         {
-          titulo: 'Bloco 1 — Ombros',
-          voltas: '4 voltas',
-          descanso: '60s',
+          titulo: "Bloco 1 — Ombros",
+          voltas: "4 voltas",
+          descanso: "60s",
           exercicios: [
-            ['Desenvolvimento', '12'],
-            ['Elevação lateral', '15'],
-            ['Crucifixo inverso', '15'],
-            ['Elevação lateral parcial', '15 curtas'],
+            ["Desenvolvimento", "12"],
+            ["Elevação lateral", "15"],
+            ["Crucifixo inverso", "15"],
+            ["Elevação lateral parcial", "15 curtas"],
           ],
         },
         {
-          titulo: 'Bloco 2 — Braços',
-          voltas: '3 voltas',
-          descanso: '60s',
+          titulo: "Bloco 2 — Braços",
+          voltas: "3 voltas",
+          descanso: "60s",
           exercicios: [
-            ['Tríceps corda', '15'],
-            ['Tríceps testa', '12'],
-            ['Rosca martelo', '12'],
-            ['Rosca alternada', '12'],
+            ["Tríceps corda", "15"],
+            ["Tríceps testa", "12"],
+            ["Rosca martelo", "12"],
+            ["Rosca alternada", "12"],
           ],
         },
         {
-          titulo: 'Bloco 3 — Costas + Core',
-          voltas: '3 voltas',
-          descanso: '60s',
+          titulo: "Bloco 3 — Costas + Core",
+          voltas: "3 voltas",
+          descanso: "60s",
           exercicios: [
-            ['Remada baixa', '15'],
-            ['Pulldown', '15'],
-            ['Prancha', '40s'],
-            ['Vacuum abdominal', '20s'],
+            ["Remada baixa", "15"],
+            ["Pulldown", "15"],
+            ["Prancha", "40s"],
+            ["Vacuum abdominal", "20s"],
           ],
         },
       ],
-      finalizador: ['15 min caminhada inclinada (inclinação 8–12)'],
+      finalizador: ["15 min caminhada inclinada (inclinação 8–12)"],
     },
 
     Quarta: {
-      foco: 'Perna Completa + Glúteo',
+      foco: "Perna Completa + Glúteo",
       blocos: [
         {
-          titulo: 'Bloco 1 — Quadríceps',
-          voltas: '3 voltas',
-          descanso: '90s',
+          titulo: "Bloco 1 — Quadríceps",
+          voltas: "3 voltas",
+          descanso: "90s",
           exercicios: [
-            ['Agachamento livre', '12'],
-            ['Leg press', '15'],
-            ['Passada andando', '12 cada'],
-            ['Agachamento isométrico', '30s'],
+            ["Agachamento livre", "12"],
+            ["Leg press", "15"],
+            ["Passada andando", "12 cada"],
+            ["Agachamento isométrico", "30s"],
           ],
         },
         {
-          titulo: 'Bloco 2 — Glúteo',
-          voltas: '3 voltas',
-          descanso: '60s',
+          titulo: "Bloco 2 — Glúteo",
+          voltas: "3 voltas",
+          descanso: "60s",
           exercicios: [
-            ['Elevação pélvica', '15'],
-            ['Abdução máquina', '20'],
-            ['Stiff unilateral', '12 cada'],
+            ["Elevação pélvica", "15"],
+            ["Abdução máquina", "20"],
+            ["Stiff unilateral", "12 cada"],
           ],
         },
       ],
-      finalizador: ['Bike: 30s forte / 30s leve ×10'],
+      finalizador: ["Bike: 30s forte / 30s leve ×10"],
     },
 
     Quinta: {
-      foco: 'Metabólico Feminino',
+      foco: "Metabólico Feminino",
       blocos: [
         {
-          titulo: 'Circuito',
-          voltas: '5 voltas',
-          descanso: '1 min',
+          titulo: "Circuito",
+          voltas: "5 voltas",
+          descanso: "1 min",
           exercicios: [
-            ['Kettlebell swing', '15'],
-            ['Step-up no banco', '12 cada'],
-            ['Remada', '12'],
-            ['Agachamento com halter', '15'],
-            ['Mountain climber lento', '30s'],
-            ['Bike', '1 min'],
+            ["Kettlebell swing", "15"],
+            ["Step-up no banco", "12 cada"],
+            ["Remada", "12"],
+            ["Agachamento com halter", "15"],
+            ["Mountain climber lento", "30s"],
+            ["Bike", "1 min"],
           ],
         },
         {
-          titulo: 'Core',
-          voltas: '3 voltas',
-          descanso: 'Sem descanso definido',
+          titulo: "Core",
+          voltas: "3 voltas",
+          descanso: "Sem descanso definido",
           exercicios: [
-            ['Prancha lateral', '30s'],
-            ['Bird dog', '12'],
-            ['Vacuum abdominal', '20s'],
+            ["Prancha lateral", "30s"],
+            ["Bird dog", "12"],
+            ["Vacuum abdominal", "20s"],
           ],
         },
       ],
-      finalizador: ['Treino metabólico concluído'],
+      finalizador: ["Treino metabólico concluído"],
     },
 
     Sexta: {
-      foco: 'Glúteo + Full Body',
+      foco: "Glúteo + Full Body",
       blocos: [
         {
-          titulo: 'Bloco 1',
-          voltas: '4 voltas',
-          descanso: '90s',
+          titulo: "Bloco 1",
+          voltas: "4 voltas",
+          descanso: "90s",
           exercicios: [
-            ['Terra romeno', '12'],
-            ['Agachamento goblet', '15'],
-            ['Desenvolvimento', '12'],
-            ['Remada baixa', '12'],
+            ["Terra romeno", "12"],
+            ["Agachamento goblet", "15"],
+            ["Desenvolvimento", "12"],
+            ["Remada baixa", "12"],
           ],
         },
         {
-          titulo: 'Bloco 2 — Glúteo Intenso',
-          voltas: '3 voltas',
-          descanso: '60s',
+          titulo: "Bloco 2 — Glúteo Intenso",
+          voltas: "3 voltas",
+          descanso: "60s",
           exercicios: [
-            ['Elevação pélvica', '15'],
-            ['Abdução', '25'],
-            ['Frog pump', '25'],
+            ["Elevação pélvica", "15"],
+            ["Abdução", "25"],
+            ["Frog pump", "25"],
           ],
         },
       ],
-      finalizador: ['Escada: 8 min contínuos'],
+      finalizador: ["Escada: 8 min contínuos"],
     },
   };
 
@@ -168,18 +168,18 @@ export default function TreinoApp() {
   const [rodando, setRodando] = useState(false);
 
   useEffect(() => {
-    const salvo = localStorage.getItem('treino-checklist');
+    const salvo = localStorage.getItem("treino-checklist");
     if (salvo) {
       setConcluidos(JSON.parse(salvo));
     }
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('treino-checklist', JSON.stringify(concluidos));
+    localStorage.setItem("treino-checklist", JSON.stringify(concluidos));
   }, [concluidos]);
 
   useEffect(() => {
-    let timer: NodeJS.Timeout;
+    let timer: ReturnType<typeof setInterval> | null = null;
 
     if (rodando && tempo > 0) {
       timer = setInterval(() => {
@@ -187,21 +187,27 @@ export default function TreinoApp() {
       }, 1000);
     }
 
-    return () => clearInterval(timer);
+    return () => {
+      if (timer) clearInterval(timer);
+    };
   }, [rodando, tempo]);
 
   const toggleExercicio = (key: string) => {
-  setConcluidos((prev: Record<string, boolean>) => ({
-    ...prev,
-    [key]: !(prev[key] ?? false),
-  }));
-};
+    setConcluidos((prev: Record<string, boolean>) => {
+      const atual = prev?.[key] ?? false;
+
+      return {
+        ...prev,
+        [key]: !atual,
+      };
+    });
+  };
 
   const formatarTempo = (segundos: number) => {
     const min = Math.floor(segundos / 60);
     const sec = segundos % 60;
 
-    return `${min}:${sec.toString().padStart(2, '0')}`;
+    return `${min}:${sec.toString().padStart(2, "0")}`;
   };
 
   return (
@@ -245,6 +251,7 @@ export default function TreinoApp() {
               </div>
             </div>
           </div>
+
           <h1 className="text-4xl font-bold mb-2">Meu Treino</h1>
           <p className="text-gray-600 text-lg">
             Organização semanal dos seus treinos
@@ -252,7 +259,7 @@ export default function TreinoApp() {
         </div>
 
         <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
-          {Object.entries(treinos).map(([dia, dados]) => (
+          {Object.entries(treinos).map(([dia, dados]: any) => (
             <div
               key={dia}
               className="bg-white rounded-3xl shadow-lg p-6 border border-gray-200"
@@ -265,11 +272,8 @@ export default function TreinoApp() {
               </div>
 
               <div className="space-y-5">
-                {dados.blocos.map((bloco, blocoIndex) => (
-                  <div
-                    key={blocoIndex}
-                    className="bg-gray-50 rounded-3xl p-4"
-                  >
+                {dados.blocos.map((bloco: any, blocoIndex: number) => (
+                  <div key={blocoIndex} className="bg-gray-50 rounded-3xl p-4">
                     <div className="mb-3">
                       <h3 className="font-bold text-lg">{bloco.titulo}</h3>
                       <p className="text-sm text-gray-500">
@@ -278,26 +282,35 @@ export default function TreinoApp() {
                     </div>
 
                     <div className="space-y-3">
-                      {bloco.exercicios.map(([nome, serie], index) => (
-                        <div
-                          key={index}
-                          className="flex items-center justify-between bg-white rounded-2xl p-3"
-                        >
-                          <div>
-                            <p className="font-semibold">{nome}</p>
-                            <p className="text-sm text-gray-500">{serie}</p>
-                          </div>
+                      {bloco.exercicios.map(
+                        ([nome, serie]: [string, string], index: number) => (
+                          <div
+                            key={index}
+                            className="flex items-center justify-between bg-white rounded-2xl p-3"
+                          >
+                            <div>
+                              <p className="font-semibold">{nome}</p>
+                              <p className="text-sm text-gray-500">
+                                {serie}
+                              </p>
+                            </div>
 
-                          <input
-                            type="checkbox"
-                            checked={concluidos[`${dia}-${blocoIndex}-${index}`] || false}
-                            onChange={() =>
-                              toggleExercicio(`${dia}-${blocoIndex}-${index}`)
-                            }
-                            className="w-6 h-6 rounded-full"
-                          />
-                        </div>
-                      ))}
+                            <input
+                              type="checkbox"
+                              checked={
+                                concluidos[`${dia}-${blocoIndex}-${index}`] ||
+                                false
+                              }
+                              onChange={() =>
+                                toggleExercicio(
+                                  `${dia}-${blocoIndex}-${index}`
+                                )
+                              }
+                              className="w-6 h-6 rounded-full"
+                            />
+                          </div>
+                        )
+                      )}
                     </div>
                   </div>
                 ))}
@@ -306,14 +319,16 @@ export default function TreinoApp() {
                   <h3 className="font-bold text-lg mb-2">Finalizador</h3>
 
                   <div className="space-y-2">
-                    {dados.finalizador.map((item, index) => (
-                      <div
-                        key={index}
-                        className="bg-white/10 rounded-2xl p-3 text-sm"
-                      >
-                        {item}
-                      </div>
-                    ))}
+                    {dados.finalizador.map(
+                      (item: string, index: number) => (
+                        <div
+                          key={index}
+                          className="bg-white/10 rounded-2xl p-3 text-sm"
+                        >
+                          {item}
+                        </div>
+                      )
+                    )}
                   </div>
                 </div>
               </div>
@@ -344,10 +359,7 @@ export default function TreinoApp() {
               placeholder="Carga Atual"
               className="border rounded-2xl p-3"
             />
-            <input
-              placeholder="Meta"
-              className="border rounded-2xl p-3"
-            />
+            <input placeholder="Meta" className="border rounded-2xl p-3" />
           </div>
 
           <button className="mt-4 bg-black text-white px-6 py-3 rounded-2xl font-semibold">
