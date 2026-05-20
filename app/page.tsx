@@ -1,5 +1,20 @@
 "use client";
+
 import { useEffect, useState } from "react";
+
+import { auth, db } from "@/lib/firebase";
+
+import {
+  GoogleAuthProvider,
+  signInWithPopup,
+  onAuthStateChanged,
+} from "firebase/auth";
+
+import {
+  doc,
+  setDoc,
+  getDoc,
+} from "firebase/firestore";
 
 export default function TreinoApp() {
   const treinos: Record<string, any> = {
@@ -166,33 +181,68 @@ export default function TreinoApp() {
   const [concluidos, setConcluidos] = useState<Record<string, boolean>>({});
   const [tempo, setTempo] = useState(60);
   const [rodando, setRodando] = useState(false);
+const [usuario, setUsuario] = useState<any>(null);
 
-  useEffect(() => {
-    const salvo = localStorage.getItem("treino-checklist");
-    if (salvo) {
-      setConcluidos(JSON.parse(salvo));
+useEffect(() => {
+  const salvo = localStorage.getItem("treino-checklist");
+
+  if (salvo) {
+    setConcluidos(JSON.parse(salvo));
+  }
+}, []);
+
+useEffect(() => {
+  localStorage.setItem(
+    "treino-checklist",
+    JSON.stringify(concluidos)
+  );
+
+  const salvarFirestore = async () => {
+    if (!usuario) return;
+
+    await setDoc(doc(db, "treinos", usuario.uid), {
+      concluidos,
+    });
+  };
+
+  salvarFirestore();
+}, [concluidos, usuario]);
+
+useEffect(() => {
+  let timer: ReturnType<typeof setInterval> | null = null;
+
+  if (rodando && tempo > 0) {
+    timer = setInterval(() => {
+      setTempo((prev) => prev - 1);
+    }, 1000);
+  }
+
+  return () => {
+    if (timer) {
+      clearInterval(timer);
     }
-  }, []);
+  };
+}, [rodando, tempo]);
 
-  useEffect(() => {
-    localStorage.setItem("treino-checklist", JSON.stringify(concluidos));
-  }, [concluidos]);
+useEffect(() => {
+  const unsubscribe = onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      setUsuario(user);
 
-  useEffect(() => {
-    let timer: ReturnType<typeof setInterval> | null = null;
+      const docRef = doc(db, "treinos", user.uid);
 
-    if (rodando && tempo > 0) {
-      timer = setInterval(() => {
-        setTempo((prev) => prev - 1);
-      }, 1000);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        setConcluidos(docSnap.data().concluidos || {});
+      }
     }
+  });
 
-    return () => {
-      if (timer) clearInterval(timer);
-    };
-  }, [rodando, tempo]);
+  return () => unsubscribe();
+}, []);  
 
-  const toggleExercicio = (key: string) => {
+const toggleExercicio = (key: string) => {
     setConcluidos((prev: Record<string, boolean>) => {
       const atual = prev?.[key] ?? false;
 
@@ -202,7 +252,18 @@ export default function TreinoApp() {
       };
     });
   };
+const loginGoogle = async () => {
+  try {
+    const provider = new GoogleAuthProvider();
 
+    await signInWithPopup(auth, provider);
+
+    alert("Login realizado com sucesso!");
+  } catch (error) {
+    console.error(error);
+    alert("Erro ao fazer login");
+  }
+};
   const formatarTempo = (segundos: number) => {
     const min = Math.floor(segundos / 60);
     const sec = segundos % 60;
@@ -251,7 +312,12 @@ export default function TreinoApp() {
               </div>
             </div>
           </div>
-
+<button
+  onClick={loginGoogle}
+  className="bg-black text-white px-6 py-3 rounded-2xl font-semibold mb-6"
+>
+  Entrar com Google
+</button>
           <h1 className="text-4xl font-bold mb-2">Meu Treino</h1>
           <p className="text-gray-600 text-lg">
             Organização semanal dos seus treinos
