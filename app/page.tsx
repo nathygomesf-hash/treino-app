@@ -179,8 +179,14 @@ export default function TreinoApp() {
   };
 
   const [concluidos, setConcluidos] = useState<Record<string, boolean>>({});
-  const [tempo, setTempo] = useState(60);
-  const [rodando, setRodando] = useState(false);
+const [treinosConcluidos, setTreinosConcluidos] = useState<Record<string, boolean>>({});
+const [tempo, setTempo] = useState(60);
+const [rodando, setRodando] = useState(false);
+
+useEffect(() => {
+  console.log("Treinos concluídos:", treinosConcluidos);
+}, [treinosConcluidos]);
+
 const [usuario, setUsuario] = useState<any>(null);
 
 useEffect(() => {
@@ -189,6 +195,12 @@ useEffect(() => {
   if (salvo) {
     setConcluidos(JSON.parse(salvo));
   }
+
+  const treinosSalvos = localStorage.getItem("treinos-concluidos");
+
+  if (treinosSalvos) {
+    setTreinosConcluidos(JSON.parse(treinosSalvos));
+  }
 }, []);
 
 useEffect(() => {
@@ -196,17 +208,14 @@ useEffect(() => {
     "treino-checklist",
     JSON.stringify(concluidos)
   );
+}, [concluidos]);
 
-  const salvarFirestore = async () => {
-    if (!usuario) return;
-
-    await setDoc(doc(db, "treinos", usuario.uid), {
-      concluidos,
-    });
-  };
-
-  salvarFirestore();
-}, [concluidos, usuario]);
+useEffect(() => {
+  localStorage.setItem(
+    "treinos-concluidos",
+    JSON.stringify(treinosConcluidos)
+  );
+}, [treinosConcluidos]);
 
 useEffect(() => {
   let timer: ReturnType<typeof setInterval> | null = null;
@@ -270,7 +279,30 @@ const loginGoogle = async () => {
 
     return `${min}:${sec.toString().padStart(2, "0")}`;
   };
+const calcularProgresso = (dia: string, dados: any) => {
+  const total = dados.blocos.reduce(
+    (soma: number, bloco: any) => soma + bloco.exercicios.length,
+    0
+  );
 
+  const feitos = dados.blocos.reduce((soma: number, bloco: any, blocoIndex: number) => {
+    const concluidosBloco = bloco.exercicios.filter(
+      (_: any, index: number) => concluidos[`${dia}-${blocoIndex}-${index}`]
+    ).length;
+
+    return soma + concluidosBloco;
+  }, 0);
+
+  const porcentagem = total === 0 ? 0 : Math.round((feitos / total) * 100);
+
+  return { total, feitos, porcentagem };
+};
+const totalTreinos = Object.keys(treinos).length;
+
+const treinosFeitos = Object.values(treinosConcluidos).filter(Boolean).length;
+
+const aproveitamento =
+  totalTreinos === 0 ? 0 : Math.round((treinosFeitos / totalTreinos) * 100);
   return (
     <div className="min-h-screen bg-gray-100 p-6">
       <div className="max-w-6xl mx-auto">
@@ -312,6 +344,7 @@ const loginGoogle = async () => {
               </div>
             </div>
           </div>
+
 <button
   onClick={loginGoogle}
   className="bg-black text-white px-6 py-3 rounded-2xl font-semibold mb-6"
@@ -323,20 +356,134 @@ const loginGoogle = async () => {
             Organização semanal dos seus treinos
           </p>
         </div>
+<div className="mt-6 bg-white rounded-3xl shadow-lg p-4">
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+  <div className="bg-white rounded-3xl shadow-lg p-5 text-center">
+    <p className="text-gray-500 text-sm">
+      Treinos Feitos
+    </p>
 
+    <h3 className="text-3xl font-bold mt-2">
+      {treinosFeitos}
+    </h3>
+  </div>
+
+  <div className="bg-white rounded-3xl shadow-lg p-5 text-center">
+    <p className="text-gray-500 text-sm">
+      Semana Atual
+    </p>
+
+    <h3 className="text-3xl font-bold mt-2">
+      {treinosFeitos}/{totalTreinos}
+    </h3>
+  </div>
+
+  <div className="bg-white rounded-3xl shadow-lg p-5 text-center">
+    <p className="text-gray-500 text-sm">
+      Aproveitamento
+    </p>
+
+    <h3 className="text-3xl font-bold mt-2 text-green-600">
+      {aproveitamento}%
+    </h3>
+  </div>
+</div>
+  <h2 className="text-lg font-bold mb-3">Resumo da Semana</h2>
+
+  <div className="grid grid-cols-5 gap-2">
+    {Object.keys(treinos).map((dia) => (
+      <div
+        key={dia}
+        className={`rounded-2xl p-3 text-center font-semibold ${
+          treinosConcluidos[dia]
+            ? "bg-green-100 text-green-700"
+            : "bg-gray-100 text-gray-500"
+        }`}
+      >
+        <div className="text-xl">
+          {treinosConcluidos[dia] ? "✅" : "⬜"}
+        </div>
+        <div className="text-xs mt-1">{dia.slice(0, 3)}</div>
+      </div>
+    ))}
+  </div>
+</div>
         <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
-          {Object.entries(treinos).map(([dia, dados]: any) => (
+          {Object.entries(treinos).map(([dia, dados]) => {
+  const progresso = calcularProgresso(dia, dados);
+const totalTreinos = Object.keys(treinos).length;
+
+const treinosFeitos = Object.values(treinosConcluidos).filter(
+  Boolean
+).length;
+
+const aproveitamento = Math.round(
+  (treinosFeitos / totalTreinos) * 100
+);
+  return (
             <div
               key={dia}
               className="bg-white rounded-3xl shadow-lg p-6 border border-gray-200"
             >
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-2xl font-bold">{dia}</h2>
-                <span className="text-sm bg-black text-white px-3 py-1 rounded-full">
-                  {dados.foco}
-                </span>
-              </div>
+  <div>
+    <div className="mb-3">
+  <div className="flex justify-between text-sm mb-1">
+    <span>Progresso</span>
+    <span>
+      {progresso.feitos}/{progresso.total}
+    </span>
+  </div>
 
+  <div className="w-full bg-gray-200 rounded-full h-3">
+    <div
+      className="bg-green-500 h-3 rounded-full transition-all duration-500"
+      style={{ width: `${progresso.porcentagem}%` }}
+    />
+  </div>
+
+  <p className="text-xs text-gray-500 mt-1">
+    {progresso.porcentagem}% concluído
+  </p>
+</div>
+    <h2 className="text-2xl font-bold">{dia}</h2>
+
+    {treinosConcluidos[dia] && (
+      <p className="text-green-600 font-bold text-sm mt-1">
+        ✅ Concluído
+      </p>
+    )}
+  </div>
+
+  <span className="text-sm bg-black text-white px-3 py-1 rounded-full">
+    {dados.foco}
+  </span>
+</div>
+{treinosConcluidos[dia] ? (
+  <div className="bg-green-50 border border-green-300 rounded-3xl p-5 text-center">
+    <p className="text-3xl mb-2">✅</p>
+    <h3 className="text-xl font-bold text-green-700">
+      Treino concluído
+    </h3>
+    <p className="text-green-600 mt-1">
+      Bom trabalho! Esse treino já foi finalizado.
+    </p>
+
+    <button
+      type="button"
+      onClick={() =>
+        setTreinosConcluidos((prev) => ({
+          ...prev,
+          [dia]: false,
+        }))
+      }
+      className="mt-4 bg-green-600 text-white px-5 py-3 rounded-2xl font-semibold"
+    >
+      Reabrir treino
+    </button>
+  </div>
+) : (
+  <>
               <div className="space-y-5">
                 {dados.blocos.map((bloco: any, blocoIndex: number) => (
                   <div key={blocoIndex} className="bg-gray-50 rounded-3xl p-4">
@@ -406,13 +553,23 @@ const loginGoogle = async () => {
                 />
               </div>
 
-              <button className="w-full mt-4 bg-black text-white py-3 rounded-2xl font-semibold hover:opacity-90 transition">
-                Finalizar treino
-              </button>
+              <button
+  onClick={() => {
+       setTreinosConcluidos((prev) => ({
+      ...prev,
+      [dia]: true,
+    }));
+  }}
+  className="w-full mt-4 bg-green-600 text-white py-3 rounded-2xl font-semibold hover:opacity-90 transition"
+>
+  ✅ Finalizar treino
+</button> 
+</>
+)}
             </div>
-          ))}
-        </div>
-
+  );
+})}
+</div>
         <div className="mt-10 bg-white rounded-3xl shadow-lg p-6">
           <h2 className="text-2xl font-bold mb-4">Progressão de Carga</h2>
 
