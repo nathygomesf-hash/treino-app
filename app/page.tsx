@@ -149,7 +149,7 @@ export default function TreinoApp() {
       finalizador: ["Treino metabólico concluído"],
     },
 
-    Sexta: {
+       Sexta: {
       foco: "Glúteo + Full Body",
       blocos: [
         {
@@ -176,10 +176,30 @@ export default function TreinoApp() {
       ],
       finalizador: ["Escada: 8 min contínuos"],
     },
-  };
 
+    Sabado: {
+      foco: "Descanso Ativo",
+      blocos: [],
+      finalizador: [
+        "🚶 Caminhada 30 min",
+        "🧘 Alongamento",
+        "🤸 Mobilidade",
+      ],
+    },
+
+    Domingo: {
+      foco: "Recuperação",
+      blocos: [],
+      finalizador: [
+        "😴 Descanso",
+        "💧 Hidratação",
+        "🛌 Recuperação muscular",
+      ],
+    },
+  };
   const [concluidos, setConcluidos] = useState<Record<string, boolean>>({});
 const [treinosConcluidos, setTreinosConcluidos] = useState<Record<string, boolean>>({});
+const [diaSelecionado, setDiaSelecionado] = useState("Segunda");
 const [tempo, setTempo] = useState(60);
 const [rodando, setRodando] = useState(false);
 
@@ -389,27 +409,38 @@ const aproveitamento =
   </div>
 </div>
   <h2 className="text-lg font-bold mb-3">Resumo da Semana</h2>
+<div className="flex gap-3 overflow-x-auto pb-3 mb-6">
+  {Object.keys(treinos).map((dia) => {
+    const selecionado = diaSelecionado === dia;
+    const concluido = treinosConcluidos[dia];
 
-  <div className="grid grid-cols-5 gap-2">
-    {Object.keys(treinos).map((dia) => (
-      <div
+    return (
+      <button
         key={dia}
-        className={`rounded-2xl p-3 text-center font-semibold ${
-          treinosConcluidos[dia]
-            ? "bg-green-100 text-green-700"
-            : "bg-gray-100 text-gray-500"
+        onClick={() => setDiaSelecionado(dia)}
+        className={`min-w-[72px] rounded-3xl px-4 py-3 text-center transition-all duration-300 ${
+          selecionado
+            ? "bg-green-600 text-white shadow-lg scale-105"
+            : concluido
+            ? "bg-green-50 text-green-700 border border-green-200"
+            : "bg-white text-gray-600 border border-gray-200"
         }`}
       >
-        <div className="text-xl">
-          {treinosConcluidos[dia] ? "✅" : "⬜"}
+        <div className="text-lg font-bold">
+          {concluido ? "✓" : dia.slice(0, 3).toUpperCase()}
         </div>
-        <div className="text-xs mt-1">{dia.slice(0, 3)}</div>
-      </div>
-    ))}
-  </div>
+
+        <div className="text-xs font-semibold mt-1">
+          {dia.slice(0, 3)}
+        </div>
+      </button>
+    );
+  })}
 </div>
         <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
-          {Object.entries(treinos).map(([dia, dados]) => {
+  {Object.entries(treinos)
+    .filter(([dia]) => dia === diaSelecionado)
+    .map(([dia, dados]) => {
   const progresso = calcularProgresso(dia, dados);
 const totalTreinos = Object.keys(treinos).length;
 
@@ -429,10 +460,10 @@ const aproveitamento = Math.round(
   <div>
     <div className="mb-3">
   <div className="flex justify-between text-sm mb-1">
-    <span>Progresso</span>
-    <span>
-      {progresso.feitos}/{progresso.total}
-    </span>
+   <span className="text-gray-700 font-semibold">Progresso</span>
+    <span className="text-gray-700 font-semibold">
+  {progresso.feitos}/{progresso.total}
+</span>
   </div>
 
   <div className="w-full bg-gray-200 rounded-full h-3">
@@ -442,11 +473,11 @@ const aproveitamento = Math.round(
     />
   </div>
 
-  <p className="text-xs text-gray-500 mt-1">
-    {progresso.porcentagem}% concluído
-  </p>
+  <p className="text-xs text-gray-600 font-medium mt-1">
+  {progresso.porcentagem}% concluído
+</p>
 </div>
-    <h2 className="text-2xl font-bold">{dia}</h2>
+    <h2 className="text-2xl font-bold text-gray-700">{dia}</h2>
 
     {treinosConcluidos[dia] && (
       <p className="text-green-600 font-bold text-sm mt-1">
@@ -485,13 +516,30 @@ const aproveitamento = Math.round(
 ) : (
   <>
               <div className="space-y-5">
+                {dados.blocos.length === 0 && (
+  <div className="bg-green-50 border border-green-200 rounded-3xl p-5 text-center">
+    <p className="text-3xl mb-2">
+      {dia === "Sabado" ? "🧘" : "😴"}
+    </p>
+
+    <h3 className="text-xl font-bold text-green-700">
+      {dia === "Sabado" ? "Descanso Ativo" : "Recuperação"}
+    </h3>
+
+    <p className="text-green-600 mt-2">
+      {dia === "Sabado"
+        ? "Dia leve para movimentar o corpo sem sobrecarregar."
+        : "Descanse e prepare-se para a próxima semana."}
+    </p>
+  </div>
+)}
                 {dados.blocos.map((bloco: any, blocoIndex: number) => (
                   <div key={blocoIndex} className="bg-gray-50 rounded-3xl p-4">
                     <div className="mb-3">
-                      <h3 className="font-bold text-lg">{bloco.titulo}</h3>
-                      <p className="text-sm text-gray-500">
-                        {bloco.voltas} • Descanso: {bloco.descanso}
-                      </p>
+                      <h3 className="font-bold text-lg text-gray-700">{bloco.titulo}</h3>
+                      <p className="text-sm text-gray-600 font-medium">
+  {bloco.voltas} • Descanso: {bloco.descanso}
+</p>
                     </div>
 
                     <div className="space-y-3">
@@ -499,13 +547,23 @@ const aproveitamento = Math.round(
                         ([nome, serie]: [string, string], index: number) => (
                           <div
                             key={index}
-                            className="flex items-center justify-between bg-white rounded-2xl p-3"
+                            className={`
+flex items-center justify-between
+rounded-2xl p-4 border transition-all duration-300
+${
+  concluidos[`${dia}-${blocoIndex}-${index}`]
+    ? "bg-green-50 border-green-300 shadow-sm"
+    : "bg-white border-gray-200"
+}
+`}
                           >
                             <div>
-                              <p className="font-semibold">{nome}</p>
-                              <p className="text-sm text-gray-500">
-                                {serie}
-                              </p>
+                              <p className="font-bold text-black text-base">
+  {nome}
+</p>
+                              <p className="text-sm text-gray-600 mt-1">
+  {serie}
+</p>
                             </div>
 
                             <input
@@ -519,7 +577,11 @@ const aproveitamento = Math.round(
                                   `${dia}-${blocoIndex}-${index}`
                                 )
                               }
-                              className="w-6 h-6 rounded-full"
+                              className="
+w-7 h-7
+accent-green-600
+cursor-pointer
+"
                             />
                           </div>
                         )
@@ -563,13 +625,15 @@ const aproveitamento = Math.round(
   className="w-full mt-4 bg-green-600 text-white py-3 rounded-2xl font-semibold hover:opacity-90 transition"
 >
   ✅ Finalizar treino
-</button> 
+</button>
 </>
 )}
             </div>
-  );
-})}
-</div>
+
+          );
+        })}
+        </div>
+
         <div className="mt-10 bg-white rounded-3xl shadow-lg p-6">
           <h2 className="text-2xl font-bold mb-4">Progressão de Carga</h2>
 
@@ -591,5 +655,6 @@ const aproveitamento = Math.round(
         </div>
       </div>
     </div>
+  </div>
   );
 }
